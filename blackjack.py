@@ -102,20 +102,11 @@ class Play_Blackjack():
     def player_turn(self):
         self.show_player_cards()
         self.show_player_total()
+        time.sleep(0.3)
         self.show_public_dealer_cards()
+        time.sleep(0.3)
         user_choice = self.input_hit_or_stay()
         self.player_choice_handler(user_choice)
-
-    def input_hit_or_stay(self):
-        user_choice = "0"
-        while user_choice not in ("1","2"):
-            try:
-                user_choice = input("1 to hit, 2 to stay: ")
-                if user_choice not in ("1","2"):
-                    self.one_or_two_input_error()
-            except:
-                self.one_or_two_input_error()
-        return(user_choice)
 
     def player_choice_handler(self, user_choice):
         if user_choice == "1":
@@ -131,6 +122,17 @@ class Play_Blackjack():
             time.sleep(0.3)
             self.dealer_turn()
         
+    def input_hit_or_stay(self):
+        user_choice = "0"
+        while user_choice not in ("1","2"):
+            try:
+                user_choice = input("1 to hit, 2 to stay: ")
+                if user_choice not in ("1","2"):
+                    self.one_or_two_input_error()
+            except:
+                self.one_or_two_input_error()
+        return(user_choice)
+
     def chooses_hit(self):
         print("Player hits.")
         time.sleep(0.3)
