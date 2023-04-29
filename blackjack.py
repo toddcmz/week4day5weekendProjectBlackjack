@@ -30,6 +30,7 @@ class Play_Blackjack():
             elif is_blackjack == "player":
                 self.player_wins()
                 continue
+            self.first_two_are_aces()
             after_hitting_result = "under"                                                        # this whole block could
             hit_or_stay_result = "1"                                                              # turn into a single method.
             while after_hitting_result == "under" and hit_or_stay_result == "1":                  # The method would be player_turn(),
@@ -115,6 +116,26 @@ class Play_Blackjack():
         else:
             return # I think this will allow my flow to work properly after this stage in main
             
+    def first_two_are_aces(self):
+        # take care of either the player or the dealer receiving two
+        # aces as their first card, convert the value of the first ace
+        # to two and update card total. Converting card value might be uneeded atm,
+        # possibly redundant with updating card total,
+        # but if I write more code for busting later I may wish I had changed the card
+        # value as well, since I'll look for additional aces to convert in the bust
+        # case. choosing to convert the first card so that the same code works for
+        # player and dealer (dealer's first card is hidden, if we convert dealer's
+        # second card instead then we can deduce dealer's first card thanks so
+        # code that specifies the total that the dealer is showing.)
+        if self.the_player.cards[0][1] == 11 and self.the_player.cards[1][1] == 11:
+            print("Player was dealt two aces, second ace is automatically worth 2 instead of 11.")
+            time.sleep(0.3)
+            self.the_player.cards[0][1] = 2
+            self.the_player.card_total -= 9
+        if self.the_dealer.cards[0][1] == 11 and self.the_dealer.cards[1][1] == 11:
+            self.the_dealer.cards[0][1] = 2
+            self.the_dealer.card_total -= 9
+
     def player_turn(self):
         self.show_player_cards()
         self.show_player_total()
