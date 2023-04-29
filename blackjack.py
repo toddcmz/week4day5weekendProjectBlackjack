@@ -30,22 +30,23 @@ class Play_Blackjack():
             elif is_blackjack == "player":
                 self.player_wins()
                 continue
-            after_hitting_result = "under"
-            hit_or_stay_result = "1"
-            while after_hitting_result == "under" and hit_or_stay_result == "1":
-                hit_or_stay_result = self.player_turn()
-                if hit_or_stay_result == "q":
-                    return self.game_summary()
-                elif hit_or_stay_result == "1":
-                    self.chooses_hit()
-                    after_hitting_result = self.player_checks_total()
-                # if we're here in while loop, this is where hit_or_stay_result could equal "2", meaing move on.
-            # here, after previous while loop, after_hitting_result could be "busts."
+            after_hitting_result = "under"                                                        # this whole block could
+            hit_or_stay_result = "1"                                                              # turn into a single method.
+            while after_hitting_result == "under" and hit_or_stay_result == "1":                  # The method would be player_turn(),
+                hit_or_stay_result = self.player_turn()                                           # and would in that case have to be
+                if hit_or_stay_result == "q":                                                     # just one complicated method, sort of
+                    return self.game_summary()                                                    # like dealer turn, but with input calls
+                elif hit_or_stay_result == "1":                                                   # or it would need to have multiple hidden
+                    self.chooses_hit()                                                            # method calls that don't show up in the driver
+                    after_hitting_result = self.player_checks_total()                             # what's the best option for this?
+                # if we're here in while loop, this is where hit_or_stay_result                   # keep complicated driver code, or convert to one method?
+                # could equal "2", meaing move on,
+                # or after_hitting_result could equal "bust," which would also move us on. otherwise
+                # we're still in while loop and ask if you want to hit again.
             if after_hitting_result == "busts":
                 self.player_busts()
                 self.dealer_wins()
                 continue 
-            # here is where "stay" gets implemented for hit_or_stay_result = "stay"
             self.chooses_stay()
             dealer_result = self.dealer_turn()
             if dealer_result == "dealer_busts":
@@ -222,9 +223,9 @@ class Play_Blackjack():
 
     def game_summary(self):
         print("Thanks for playing.")
-        print(f"Player won {self.player_win_count} games.")
-        print(f"Dealer won {self.dealer_win_count} games.")
-        print(f"{self.total_pushes} games resulted in a tie.")
+        print(f"Player won {self.player_win_count} game(s).")
+        print(f"Dealer won {self.dealer_win_count} game(s).")
+        print(f"{self.total_pushes} game(s) resulted in a tie.")
 
     def one_or_two_input_error(self):
         print("You didn't enter 1, 2, or q. Try again.")
