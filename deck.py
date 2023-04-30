@@ -15,7 +15,7 @@ class Deck():
         for suit in suits:
             for index_rank in range(len(ranks)):
                 this_card = ranks[index_rank]+suit
-                self.deck.append([this_card, values[index_rank]])
+                self.deck.append([this_card, values[index_rank], "./cardFaces/"+this_card+".png"])
         # shuffle resulting deck
         shuffle(self.deck)
 
