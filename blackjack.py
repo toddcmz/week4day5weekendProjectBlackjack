@@ -119,22 +119,15 @@ class Play_Blackjack():
     def first_two_are_aces(self):
         # take care of either the player or the dealer receiving two
         # aces as their first card, convert the value of the first ace
-        # to two and update card total. Converting card value might be uneeded atm,
-        # possibly redundant with updating card total,
-        # but if I write more code for busting later I may wish I had changed the card
-        # value as well, since I'll look for additional aces to convert in the bust
-        # case. choosing to convert the first card so that the same code works for
-        # player and dealer (dealer's first card is hidden, if we convert dealer's
-        # second card instead then we can deduce dealer's first card thanks so
-        # code that specifies the total that the dealer is showing.)
+        # to two and update card total. 
         if self.the_player.cards[0][1] == 11 and self.the_player.cards[1][1] == 11:
             print("Player was dealt two aces, second ace is automatically worth 2 instead of 11.")
             time.sleep(0.3)
-            self.the_player.cards[0][1] = 2
-            self.the_player.card_total -= 9
+            self.the_player.cards[0][1] = 1
+            self.the_player.card_total -= 10
         if self.the_dealer.cards[0][1] == 11 and self.the_dealer.cards[1][1] == 11:
-            self.the_dealer.cards[0][1] = 2
-            self.the_dealer.card_total -= 9
+            self.the_dealer.cards[0][1] = 1
+            self.the_dealer.card_total -= 10
 
     def player_turn(self):
         self.show_player_cards()
@@ -168,6 +161,16 @@ class Play_Blackjack():
         if self.the_player.card_total < 22:
             return("under")
         else:
+            # check if we have unreduced aces, if we do, reduce one
+            # and return under again.
+            for this_card in range(len(self.the_player.cards)):
+                if self.the_player.cards[this_card][1]==11:
+                    print(f"Reducing {self.the_player.cards[this_card][0]} from 11 to 1.")
+                    time.sleep(0.3)
+                    self.the_player.cards[this_card][1] = 1
+                    self.the_player.card_total -= 10
+                    self.show_player_total()
+                    return("under")
             return("busts")
 
     def player_busts(self):
@@ -188,38 +191,45 @@ class Play_Blackjack():
         time.sleep(0.3)
 
     def dealer_turn(self):
+        self.show_all_dealer_cards()
+        self.show_all_dealer_total()
         while self.the_dealer.card_total < 16:
             print("Dealer hits")
             time.sleep(0.6)
-            self.the_dealer.add_card(self.game_deck.deck.pop())
+            dealer_hit_card = self.game_deck.deck.pop()
+            print(f"Dealer drew {dealer_hit_card[0]}")
+            time.sleep(0.6)
+            self.the_dealer.add_card(dealer_hit_card)
             print("Dealer now has:")
             time.sleep(0.6)
-            self.show_public_dealer_cards()
+            self.show_all_dealer_cards()
             time.sleep(0.6)
-            self.show_public_dealer_total()
+            self.show_all_dealer_total()
             time.sleep(0.6)
-        if self.the_dealer.card_total > 21:
-            return("dealer_busts")
-        else:
-            print("Dealer stays.")
-            time.sleep(0.6)
-            return("dealer_stays")
+            if self.the_dealer.card_total > 21:
+                # check if we have unreduced aces, if we do, reduce one
+                for this_card in range(len(self.the_dealer.cards)):
+                    if self.the_dealer.cards[this_card][1]==11:
+                        print(f"Reducing {self.the_dealer.cards[this_card][0]} from 11 to 1.")
+                        time.sleep(0.3)
+                        self.the_dealer.cards[this_card][1] = 1
+                        self.the_dealer.card_total -= 10
+                        self.show_all_dealer_total()
+                        # if there are multiple aces, only allow this to happen once
+                        # until the next hit.
+                        break
+                if self.the_dealer.card_total > 21:
+                    return("dealer_busts")
+        print("Dealer stays.")
+        time.sleep(0.6)
+        return("dealer_stays")
 
     def dealer_busts(self):
-        print("Dealer busts, you win!")
-        time.sleep(0.6)
-        self.show_all_dealer_cards()
-        time.sleep(0.6)
-        self.show_all_dealer_total()
-        time.sleep(0.6)
+        print("Dealer busts!")
+        time.sleep(0.2)
     
     def compare_totals(self):
-        print(f"Dealer's first card was {self.the_dealer.cards[0][0]}")
-        time.sleep(0.6)
-        self.show_all_dealer_total()
-        time.sleep(0.6)
-        self.show_all_dealer_cards()
-        time.sleep(0.6)
+        print(f'Player has {self.the_player.card_total} and dealer has {self.the_dealer.card_total}')
         if self.the_player.card_total > self.the_dealer.card_total:
             return("player_wins")
         elif self.the_player.card_total == self.the_dealer.card_total:
