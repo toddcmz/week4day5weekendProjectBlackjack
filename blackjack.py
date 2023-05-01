@@ -136,6 +136,7 @@ class Play_Blackjack():
         self.show_public_dealer_cards()
         time.sleep(0.3)
         hit_or_stay = self.input_hit_or_stay()
+        self.clear()
         return hit_or_stay
         
     def input_hit_or_stay(self):
@@ -237,17 +238,27 @@ class Play_Blackjack():
         else:
             return("dealer_wins")
 
+    def summarize_game(self):
+        self.clear()
+        self.show_player_cards()
+        self.show_all_dealer_cards()
+        self.show_player_total()
+        self.show_all_dealer_total()
+
     def player_wins(self):
+        self.summarize_game()
         print("Congratulations, you won!")
         time.sleep(0.3)
         self.player_win_count +=1
 
     def dealer_wins(self):
+        self.summarize_game()
         print("The dealer won that one.")
         time.sleep(0.3)
         self.dealer_win_count +=1
 
     def pushed(self):
+        self.summarize_game()
         print("You and the dealer pushed. This hand is a draw.")
         time.sleep(0.3)
         self.total_pushes +=1
